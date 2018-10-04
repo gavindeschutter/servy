@@ -13,7 +13,7 @@ defmodule Servy.Handler do
       |> List.first
       |> String.split(" ")
 
-    conv = %{
+    %{
       method: method,
       path: path,
       resp_body: ""
