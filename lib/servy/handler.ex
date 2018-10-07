@@ -1,4 +1,7 @@
 defmodule Servy.Handler do
+
+  @moduledoc "Handles HTTP reqeusts."
+
   def handle(request) do
     request
     |> parse
