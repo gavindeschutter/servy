@@ -20,6 +20,7 @@ defmodule Servy.Handler do
       method: method,
       path: path,
       resp_body: ""
+      status: nil
     }
   end
 
@@ -28,15 +29,15 @@ defmodule Servy.Handler do
   end
 
   def route(conv, "GET", "/wildthings") do
-    %{ conv | resp_body: "Bears, Lions, Tigers" }
+    %{ conv | status: 200, resp_body: "Bears, Lions, Tigers" }
   end
 
   def route(conv, "GET", "/bears") do
-    %{ conv | resp_body: "Teddy, Smokey, Paddington" }
+    %{ conv | status: 200, resp_body: "Teddy, Smokey, Paddington" }
   end
 
   def route(conv, _method, path) do
-    %{ conv | resp_body: "No #{path} here!" }
+    %{ conv | status: 404, resp_body: "No #{path} here!" }
   end
 
   def format_response(conv) do
