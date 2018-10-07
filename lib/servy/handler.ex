@@ -42,7 +42,7 @@ defmodule Servy.Handler do
 
   def format_response(conv) do
     """
-    HTTP/1.1 200 OK
+    HTTP/1.1 #{conv.status} OK
     Content-Type: text/html
     Content-Length: #{String.length(conv.resp_body)}
 
