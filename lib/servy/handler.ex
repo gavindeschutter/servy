@@ -1,21 +1,4 @@
-defmodule Servy.Handler do
-
-  @moduledoc "Handles HTTP reqeusts."
-
-  @doc "Transforms the request into a response."
-
-  @pages_path Path.expand("../../pages/", __DIR__)
-
-  def handle(request) do
-    request
-    |> parse
-    |> rewrite_path
-    |> log
-    |> route
-    |> track
-    |> format_response
-  end
-
+defmodule Servy.Plugins do
   def track(%{ status: 404, path: path } = conv) do
     IO.puts "Warning: #{path} is on the loose!"
     conv
@@ -30,6 +13,25 @@ defmodule Servy.Handler do
   def rewrite_path(conv), do: conv
 
   def log(conv), do: IO.inspect(conv)
+end
+
+defmodule Servy.Handler do
+
+  @moduledoc "Handles HTTP reqeusts."
+
+  @pages_path Path.expand("../../pages/", __DIR__)
+  
+  @doc "Transforms the request into a response."
+  def handle(request) do
+    request
+    |> parse
+    |> rewrite_path
+    |> log
+    |> route
+    |> track
+    |> format_response
+  end
+
 
   def parse(request) do
     [method, path, _] = 
