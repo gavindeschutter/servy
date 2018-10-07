@@ -1,27 +1,27 @@
 defmodule Servy.Handler do
+
+  @moduledoc "Handles HTTP reqeusts."
+
+  alias Servy.Conv
+
+  @pages_path Path.expand("../../pages/", __DIR__)
+  
+  import Servy.Plugins, only: [rewrite_path: 1, log: 1, track: 1]
+  import Servy.Parser, only: [parse: 1]
+
+  @doc "Transforms the request into a response."
   def handle(request) do
     request
     |> parse
+    |> rewrite_path
     |> log
     |> route
+    |> track
     |> format_response
   end
 
-  def log(conv), do: IO.inspect(conv)
-
-  def parse(request) do
-    [method, path, _] = 
-      request 
-      |> String.split("\n")
-      |> List.first
-      |> String.split(" ")
-
-    %{
-      method: method,
-      path: path,
-      resp_body: "",
-      status: nil
-    }
+  def route(%Conv{ method: "GET", path: "/wildthings" } = conv) do
+    %{ conv | status: 200, resp_body: "Bears, Lions, Tigers" }
   end
 
   # name-Baloo&type=Brown
@@ -37,43 +37,63 @@ defmodule Servy.Handler do
     |> Path.join("about.html")
     |> File.read
     |> handle_file(conv)
-  end
 
-  def route(conv, "GET", "/wildthings") do
-    %{ conv | status: 200, resp_body: "Bears, Lions, Tigers" }
-  end
-
-  def route(conv, "GET", "/bears") do
+  def route(%Conv{ method: "GET", path: "/bears" } = conv) do
     %{ conv | status: 200, resp_body: "Teddy, Smokey, Paddington" }
   end
 
-  def route(conv, "GET", "/bears/" <> id) do
+  def route(%Conv{ method: "GET", path: "/bears/" <> id } = conv) do
     %{ conv | status: 200, resp_body: "Bear #{id}" }
   end
 
-  def route(conv, _method, path) do
+  def route(%Conv{ method: "GET", path: "/about" } = conv) do
+    @pages_path
+    |> Path.join("about.html")
+    |> File.read
+    |> handle_file(conv)
+  end
+
+  def handle_file({ :ok, content }, conv) do
+    %{ conv | status: 200, resp_body: content }
+  end
+
+  def handle_file({ :error, :enoent }, conv) do
+    %{ conv | status: 404, resp_body: "File not found" }
+  end
+
+  def handle_file({ :error, reason  }, conv) do
+    %{ conv | status: 400, resp_body: "File error: #{reason}" }
+  end
+
+  # def route(%{ method: "GET", path: "/about" } = conv) do
+  #   file =
+  #     Path.expand("../../pages/", __DIR__)
+  #     |> Path.join("about.html")
+
+  #   case File.read(file) do
+  #     { :ok, content } ->
+  #       %{ conv | status: 200, resp_body: content }
+
+  #     { :error, :enoent } ->
+  #       %{ conv | status: 404, resp_body: "File not found" }
+
+  #     { :error, reason } ->
+  #       %{ conv | status: 400, resp_body: "File error: #{reason}" }
+  #   end
+  # end
+
+  def route(%Conv{ path: path } = conv) do
     %{ conv | status: 404, resp_body: "No #{path} here!" }
   end
 
-  def format_response(conv) do
+  def format_response(%Conv{} = conv) do
     """
-    HTTP/1.1 #{conv.status} #{status_reason(conv.status)}
+    HTTP/1.1 #{Conv.full_status(conv)}
     Content-Type: text/html
     Content-Length: #{String.length(conv.resp_body)}
 
     #{conv.resp_body}
     """
-  end
-
-  defp status_reason(code) do
-    %{
-      200 => "OK",
-      201 => "Created",
-      401 => "Unauthorized",
-      403 => "Forbidden",
-      404 => "Not Found",
-      500 => "Internal Server Error"
-    }[code]
   end
 end
 
@@ -122,8 +142,11 @@ Accept: */*
 """
 
 response = Servy.Handler.handle(request)
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
+=======
+>>>>>>> 4e34f18d2a38caf1eed74f6786a1dd188f68a432
 IO.puts response
 
 request = """
@@ -146,6 +169,7 @@ Accept: */*
 """
 
 response = Servy.Handler.handle(request)
+<<<<<<< HEAD
 IO.puts response
 
 request = """
@@ -161,4 +185,6 @@ name-Baloo&type=Brown
 
 response = Servy.Handler.handle(request)
 >>>>>>> Stashed changes
+=======
+>>>>>>> 4e34f18d2a38caf1eed74f6786a1dd188f68a432
 IO.puts response
