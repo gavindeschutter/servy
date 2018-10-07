@@ -7,9 +7,7 @@ defmodule Servy.Handler do
     |> format_response
   end
 
-  def log(conv) do
-    IO.inspect(conv)
-  end
+  def log(conv), do: IO.inspect(conv)
 
   def parse(request) do
     [method, path, _] = 
