@@ -26,7 +26,7 @@ defmodule Servy.Handler do
 
   # name-Baloo&type=Brown
   def route(%Conv{ method: "POST", path: "/bears" } = conv) do
-    params = { "name" => "Baloo", "type" => "Brown" }
+    params = %{ "name" => "Baloo", "type" => "Brown" }
 
     %{ conv | status: 201,
               resp_body: "Create a #{params["type"]} bear named #{params["name"]}!" }
@@ -37,6 +37,7 @@ defmodule Servy.Handler do
     |> Path.join("about.html")
     |> File.read
     |> handle_file(conv)
+  end
 
   def route(%Conv{ method: "GET", path: "/bears" } = conv) do
     %{ conv | status: 200, resp_body: "Teddy, Smokey, Paddington" }
@@ -142,11 +143,6 @@ Accept: */*
 """
 
 response = Servy.Handler.handle(request)
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> 4e34f18d2a38caf1eed74f6786a1dd188f68a432
 IO.puts response
 
 request = """
@@ -169,7 +165,7 @@ Accept: */*
 """
 
 response = Servy.Handler.handle(request)
-<<<<<<< HEAD
+
 IO.puts response
 
 request = """
@@ -184,7 +180,4 @@ name-Baloo&type=Brown
 """
 
 response = Servy.Handler.handle(request)
->>>>>>> Stashed changes
-=======
->>>>>>> 4e34f18d2a38caf1eed74f6786a1dd188f68a432
 IO.puts response
