@@ -26,10 +26,7 @@ defmodule Servy.Handler do
 
   # name-Baloo&type=Brown
   def route(%Conv{ method: "POST", path: "/bears" } = conv) do
-    params = %{ "name" => "Baloo", "type" => "Brown" }
-
-    %{ conv | status: 201,
-              resp_body: "Create a #{params["type"]} bear named #{params["name"]}!" }
+    Servy.BearController.create(conv, conv.params)
   end
 
   def route(%Conv{ method: "GET", path: "/about" } = conv) do
@@ -178,7 +175,7 @@ Accept: */*
 Content-Type: application/x-www-form-urlencoded
 Content-Length: 21
 
-name-Baloo&type=Brown
+name=Baloo&type=Brown
 """
 
 response = Servy.Handler.handle(request)
