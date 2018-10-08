@@ -8,7 +8,7 @@ defmodule Servy.Bear do
     bear.type == "Grizzly"
   end
 
-  def order_asc_by_name(b1, b2) do
+  def order_asc_by_name(bear1, bear2) do
     bear1.name <= bear2.name
   end
 end
