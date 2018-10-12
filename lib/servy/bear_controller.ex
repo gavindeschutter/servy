@@ -30,10 +30,7 @@ defmodule Servy.BearController do
               resp_body: "Create a #{type} bear named #{name}!" }
   end
 
-  def delete(conv, %{ "id" => id}) do
-    bear = Servy.Wildthings.get_bear(id)
-
-    %{ conv | status: 200,
-              resp_body: "Bear #{bear.name} with id #{bear.id} deleted!"}
+  def delete(conv, _params) do
+    %{ conv | status: 403, resp_body: "Deleting a bear is forbidden!"}
   end
 end
