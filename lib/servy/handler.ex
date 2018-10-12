@@ -53,6 +53,12 @@ defmodule Servy.Handler do
     |> handle_file(conv)
   end
 
+  def route(%Conv{ method: "DELETE", path: "/bears/" <> id} = conv) do
+    params = Map.put(conv.params, "id", id)
+
+    Servy.BearController.show(conv, params)
+  end
+
   def handle_file({ :ok, content }, conv) do
     %{ conv | status: 200, resp_body: content }
   end
