@@ -8,8 +8,6 @@ defmodule Servy.BearController do
   end
 
   def index(conv) do
-    # TODO: Transform bears into an HTML list
-
     items = 
       Wildthings.list_bears()
       |> Enum.filter(&Bear.is_grizzly?/1)
@@ -24,11 +22,16 @@ defmodule Servy.BearController do
   def show(conv, %{ "id" => id }) do
     bear = Wildthings.get_bear(id)
 
-    %{ conv | status: 200, resp_body: "<h1>Bear #{bear.id}</h1>" }
+    %{ conv | status: 200, resp_body: "<h1>Bear #{bear.id}: #{bear.name}</h1>" }
   end
 
   def create(conv, %{ "name" => name, "type" => type }) do
     %{ conv | status: 201,
               resp_body: "Create a #{type} bear named #{name}!" }
+  end
+
+  def delete(conv, %{ "name" => name, "type" => type }) do
+    %{ conv | status: 200,
+              resp_body: "Bear #{} with id #{} deleted!"}
   end
 end
