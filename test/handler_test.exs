@@ -43,8 +43,6 @@ defmodule HandlerTest do
     """
   end
 
-
-
   # """
 
   # request = """
